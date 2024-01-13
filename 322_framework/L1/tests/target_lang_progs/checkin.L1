@@ -1,0 +1,12 @@
+(@go
+(@go
+	0 0
+	call input 0
+	rdi <- rax
+	//mem rsp -8 <- rdi
+	call print 1
+	//rdi <- mem rsp -8
+	
+	return
+)
+)

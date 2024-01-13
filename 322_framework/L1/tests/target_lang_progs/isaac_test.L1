@@ -1,0 +1,17 @@
+(@go
+	(@go
+		0 0
+		mem rsp -8 <- :input
+		call input 0
+		rdi <- rax
+		rsi <- 7
+		
+		call allocate 2
+
+		r11 <- mem rax 8
+		r9 <- 0
+		:FORL
+		cjump r11
+		return
+	)
+)

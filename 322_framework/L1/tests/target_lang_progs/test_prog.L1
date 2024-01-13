@@ -1,0 +1,51 @@
+(@go
+	(@go
+		0 0
+		
+		// get the length of the array from the user
+		call input 0
+
+		// store this number in the first argument to allocate
+		rdi <- rax
+		// call print 1
+
+		// put some dummy value in the second argument to allocate
+		rsi <- 6
+
+		// allocate/initialize the array on the heap
+		call allocate 2
+
+		// get the pointer to the array and print for inspection
+		rdi <- rax
+		call print 1
+		
+		// code to test out a for loop:
+		// i plan to use r12 (a callee saved register) so put on stack
+		mem rsp -8 <- r12
+		// initialize a counter in the freshly-saved r12
+		r12 <- 0	
+		:FORL
+		// we can just hardcode a number of iterations, say 5
+		cjump 5 <= r12 :ENDL
+		// just print some integer for proof of concept
+		rdi <- 9
+		call print 1
+		// increment the counter - add 2 to respect the encoding
+		r12 += 2
+		// loop back to the condition
+		goto :FORL
+
+		:ENDL
+		
+		// restore the callee-saved register r12
+		r12 <- mem rsp -8
+
+		// print 0 to indicate success
+		// with the encoding i think that means pass in 1 to print
+		rdi <- 1
+		call print 1
+		
+			
+		return
+	)
+)

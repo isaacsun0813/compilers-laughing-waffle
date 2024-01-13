@@ -1,0 +1,126 @@
+(@go
+(@go
+	0 0
+	
+	// read in the array from the user
+	mem rsp -8 <- :READ_RET
+	call @read_array 0
+	:READ_RET
+	rdi <- rax
+	
+	// print out the array	
+	mem rsp -8 <- :PRINT_RET
+	call @print_array 1
+	:PRINT_RET
+	
+
+	return	
+)
+
+
+(@read_array
+	0 1
+	
+	// take in the size of the array
+	call input 0
+	
+	// allocate the array with encoded zeros
+	rdi <- rax
+	rsi <- 1
+	mem rsp -8 <- rdi
+	call allocate 2
+	rdi <- mem rsp -8
+
+	// store the initial pointer returned by allocate so that we can return it later
+	mem rsp 0 <- rax
+
+	// save the length of the array to a caller-save register
+	r10 <- mem rax 0
+
+	// initialize a counter in a caller-save register
+	r11 <- 0
+
+	// initialize a pointer to the first element in the loop
+	r8 <- rax
+	r8 += 8
+
+	// for loop over the initialized array
+	:FORL_READ
+		// exit loop if the array length is less than or equal to the counter
+		cjump r10 <= r11 :ENDL_READ
+	
+		// advance array pointer to the current index	
+		r9 @ r8 r11 8
+	
+		// get the current element input from the user
+		mem rsp -8 <- r11
+		mem rsp -16 <- r10
+		mem rsp -24 <- r8	
+		call input 0
+		r11 <- mem rsp -8
+		r10 <- mem rsp -16
+		r8 <- mem rsp -24
+
+		// store the user's input at the current array pointer
+		mem r9 0 <- rax
+
+		// increment the counter
+		r11++
+
+		// loop back to the condition check
+		goto :FORL_READ
+
+	:ENDL_READ
+
+	rax <- mem rsp 0		
+	return			
+)
+
+
+(@print_array
+	// takes the pointer to the array as arg 1
+	1 0	
+
+	// save the length of the passed in array to a caller-saved register
+	r10 <- mem rdi 0
+
+	// initialize a counter in another caller-saved register
+	r11 <- 0
+
+	// initialize a pointer to the first actual element in the array
+	// ie go past the array length entry
+	r8 <- rdi
+	r8 += 8
+
+	// for loop over the array
+	:FORL
+		// exit loop if the array length is less than or equal to the counter
+		cjump r10 <= r11 :ENDL
+		
+		// advance the array pointer to current element
+		// we don't need to save r9 since we always rewrite before using	
+		r9 @ r8 r11 8
+	
+		// grab the current array element
+		rdi <- mem r9 0
+		
+		// save all the caller registers and print
+		mem rsp -8 <- r11
+		mem rsp -16 <- r10
+		mem rsp -24 <- r8
+		call print 1
+		r11 <- mem rsp -8
+		r10 <- mem rsp -16
+		r8 <- mem rsp -24
+	
+		// increment the counter
+		r11++		
+	
+		// Loop back to the condition check
+		goto :FORL
+
+	:ENDL
+	
+	return
+)
+)

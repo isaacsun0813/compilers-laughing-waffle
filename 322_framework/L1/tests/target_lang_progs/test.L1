@@ -1,0 +1,35 @@
+(@go
+	(@go
+		0 0
+		
+		rdi <- 5
+		rsi <- 7
+		call allocate 2
+		rdi <- rax
+		r12 <- rdi
+		call print 1
+		rdi <- mem r12 8
+		call print 1
+		rdi <- mem r12 16
+		call print 1
+		
+		// going to try editing the heap's memory now
+		mem r12 8 <- 9	
+		rdi <- mem r9 8
+		call print 1	
+		
+		// now try to do the correct math to index the next element
+		// this register holds the base index (can treat as 1-indexed)
+		r8 <- 1
+		// remember that r9 holds the pointer to the array
+		// we use another register to hold the curr address in the arr
+		// we use the instruction:	w @ w w E
+		// ex: 	rax @ rdi rsi 4 	~	set rax to rdi+(rsi*4)	
+		//r11 @ r9 r8 8
+		r11 <- r9
+			
+		rdi <- mem r11 0
+		call print 1	
+		return
+	)
+)

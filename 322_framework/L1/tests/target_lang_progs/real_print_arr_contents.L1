@@ -1,0 +1,65 @@
+(@go
+(@go
+	0 0
+	
+	// get user input and initialize an empty array in heap
+	call input 0
+	rdi <- rax
+	rsi <- 1
+	call allocate 2
+	rdi <- rax
+	mem rsp -8 <- :ret
+	call @iterate_array 1
+	:ret
+	
+
+	return	
+)
+
+(@iterate_array
+	// takes the pointer to the array as arg 1
+	1 0	
+
+	// save the length of the passed in array to a caller-saved register
+	r10 <- mem rdi 0
+
+	// initialize a counter in another caller-saved register
+	r11 <- 0
+
+	// initialize a pointer to the first actual element in the array
+	// ie go past the array length entry
+	r8 <- rdi
+	r8 += 8
+
+	// for loop over the array
+	:FORL
+		// exit loop if the array length is less than or equal to the counter
+		cjump r10 <= r11 :ENDL
+		
+		// advance the array pointer to current element
+		// we don't need to save r9 since we always rewrite before using	
+		r9 @ r8 r11 8
+	
+		// grab the current array element
+		rdi <- mem r9 0
+		
+		// save all the caller registers and print
+		mem rsp -8 <- r11
+		mem rsp -16 <- r10
+		mem rsp -24 <- r8
+		call print 1
+		r11 <- mem rsp -8
+		r10 <- mem rsp -16
+		r8 <- mem rsp -24
+	
+		// increment the counter
+		r11++		
+	
+		// Loop back to the condition check
+		goto :FORL
+
+	:ENDL
+	
+	return
+)
+)

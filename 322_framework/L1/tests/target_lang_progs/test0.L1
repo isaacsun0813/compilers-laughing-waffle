@@ -1,0 +1,35 @@
+(@go
+(@go
+	0 3
+	
+	// read in the length of the array
+	call input 0
+	
+	// put length of array in r12 (callee saved)
+	mem rsp 0 <- r12
+	mem rsp -8 <- r13
+	mem rsp -16 <- r14	
+	
+	r12 <- rax
+
+	// allocate an array of zeros in the heap or same size
+	rdi <- r12
+	rsi <- 1
+	call allocate 2
+
+	// put address of the array in r13 (callee saved)
+	//mem rsp -8 <- r13
+	r13 <- rax
+
+	// put a counter of 1 in r14 (callee saved)
+	//mem rsp -17 <- r14
+	r14 <- 1	
+
+	// restore callee saved registers
+	r12 <- mem rsp 0
+	r13 <- mem rsp -8	
+	r14 <- mem rsp -16	
+
+	return
+)
+)
