@@ -5,7 +5,24 @@
 
 namespace L1 {
 
-  enum RegisterID {rdi, rax};
+  enum RegisterID {   // this list currently corresponds with L1 grammar definition 'x' 
+    rdi,
+    rsi,
+    rdx,
+    rcx,
+    r8,
+    r9,
+    rax,
+    rbx,
+    rbp,
+    r10,
+    r11,
+    r12,
+    r13,
+    r14,
+    r15,
+    rsp   // note - i'm not sure if the stack pointer register should belong here
+  };
 
   class Item {
   };
